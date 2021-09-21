@@ -1,0 +1,125 @@
+####### Name of the proteomic data file
+proteomics-values-file = johansson_lumA_lumB_cp_input.txt
+
+
+####### Names of columns that contain information other than values and what they map to
+id-column = ID
+symbols-column = Symbols
+sites-column = Sites
+effect-column = Effect
+
+######## How the values in the proteomics file should be used/interpreted
+## possible values: arithmetic-mean, geometric-mean, max,difference-of-means, fold-change-of-mean, significant-change-of-mean, significant-change-of-mean-paired, signed-p-values, correlation
+# value in the example input: significant-change-of-mean-paired
+# change from example, because not paired samples in Johansson
+value-transformation = significant-change-of-mean
+
+######## FDR thresholds for data types
+fdr-threshold-for-data-significance = 0.1 protein
+fdr-threshold-for-data-significance = 0.1 phosphoprotein
+
+######## Should we use proteomic and phosphoproteomic values together while calculating the p-value threshold that satisfies the required FDR?
+# whether consider proteomic and phosphoproteomic data as a single dataset during FDR adjustment ('true' (typically with RPPA data) or 'false' (typically with MS data); default: false)
+# example input: 'true' because this is RPPA data.
+# Johansson data not RPPA -> set false
+pool-proteomics-for-fdr-adjustment = false
+
+######## Which value corresponds to most intense color? When the value is a p-value (as here), this setting is applied to -ln(p).
+# if value-transformation = significant-change-of-mean, value is -log(p) with a sign associated to it
+# value in the example input: 10
+color-saturation-value = 10
+
+######## Whether to show proteomic values on the disconnected proteins
+# value in the example input: true
+show-all-genes-with-proteomic-data = true
+
+######## Even though we set network significance calculations on here, webserver will ignore it because of limited resources. If this analysis is performed locally using the JAR file, then the network significance will be calculated.
+# values in the example input: true - 10000 - 0.1 - true
+# try 100 permutations first for running time reason 
+calculate-network-significance = true
+permutations-for-significance = 1000
+fdr-threshold-for-network-significance = 0.1
+use-network-significance-for-causal-reasoning = true
+
+######## Names of control and test columns. In a paired analysis, their order are important. - example from the example input:
+# control-value-column = Serum-DMSO-2hr
+# test-value-column = IGF1-DMSO-2hr
+# control-value-column = Serum-DMSO-4hr
+# test-value-column = IGF1-DMSO-4hr
+# ...
+# Johansson data:
+# lumB <- c("OSL.56F", "OSL.405", "OSL.49E","OSL.524", "OSL.443", "OSL.458", "OSL.521", "OSL.46D", "OSL.54D")
+# lumA <- c("OSL.567", "OSL.4B0", "OSL.485", "OSL.41B", "OSL.4AF", "OSL.46E", "OSL.494", "OSL.457","OSL.48B")
+# her2 <- c("OSL.43C", "OSL.493","OSL.4D9", "OSL.43A", "OSL.406", "OSL.47C", "OSL.40A", "OSL.40E", "OSL.3FA")
+# basal <- c("OSL.53E", "OSL.3FF", "OSL.55F", "OSL.46A", "OSL.4D6", "OSL.4B4", "OSL.449", "OSL.44E", "OSL.3EB")
+# normal <- c("OSL.441", "OSL.430", "OSL.4FA", "OSL.53D","OSL.540", "OSL.42E", "OSL.4BA", "OSL.579", "OSL.57B")
+# set lumB as test and lumA as control -> same results as lumA as test and lumB as control ???
+test-value-column = OSL.56F
+test-value-column = OSL.405
+test-value-column = OSL.49E
+test-value-column = OSL.524
+test-value-column = OSL.443
+test-value-column = OSL.458
+test-value-column = OSL.521
+test-value-column = OSL.46D
+test-value-column = OSL.54D
+control-value-column = OSL.567
+control-value-column = OSL.4B0
+control-value-column = OSL.485
+control-value-column = OSL.41B
+control-value-column = OSL.4AF
+control-value-column = OSL.46E
+control-value-column = OSL.494
+control-value-column = OSL.457
+control-value-column = OSL.48B
+
+
+
+############# NOT SET IN THE EXAMPLE FILE BUT SET HERE
+
+######## recommend to set to false if not sure
+# Use a G-test to check unequal distribution of missing values;  if opted, and sufficient data, G-test result combined with t-test result with Fisher's method (warning: assumes missing values uniformly distributed to samples; if  violated, false positives will appear; set ‘false’ if not sure)
+use-missing-proteomic-data-for-test = false
+
+
+# NB: RPPA data
+# The reverse phase protein array (RPPA) is an antibody-based protein assay platform for high-throughput sequencing that quantifies the expression of a target protein. It is cost-effective and highly sensitive to the target protein, even at low concentrations [24]. However, it greatly relies on the quality of the antibodies and requires screening to select the appropriate antibodies for the corresponding target proteins. Although RPPAs face these limitations, several studies have adopted the RPPA platform to produce proteomic data for the detection of cancer tissue phenotypes. Additionally, The Cancer Genome Atlas (TCGA) has also generated and made public RPPA data for TCGA cancer samples for use in characterizing various cancer types. This data is publicly accessible in The Cancer Proteomics Atlas (TCPA) [25].
+
+############# NOT SET IN THE EXAMPLE FILE AND LET UNSET
+# proteomics-repeat-values-file: Name of the proteomics values file for the repeated experiment, if exists;
+# value-column: Name of a value column (to use when only 1 group of experiments to consider)
+# do-log-transform: Whether log transform (default: false)
+# rna-expression-file: Name of the RNA expression file 
+# threshold-for-data-significance: Threshold value for selecting significant data (to use only when FDR controlling procedure already performed outside of CausalPath)
+# correlation-value-threshold: Option to control correlation with its value (cannot be used with FDR control)
+# correlation-upper-threshold: For filtering correlations with an upper value (filter highest correlations coming from errors)
+# pval-threshold-for-correlation: P-value threshold for correlation (for correlation-based causality; to use only when FDR control performed outside of CausalPath)
+# fdr-threshold-for-correlation: FDR threshold for the correlations (for correlation-based analysis)
+# stdev-threshold-for-data: Standard deviation threshold 
+# default-missing-value: Option to specify a default value for the missing values in the proteomics file
+# minimum-sample-size:  Set minimum sample size of the control and test sets
+# prioritize-activity-data: When there is an ActivityData associated to a protein, do not use other omic data for evidence of activity change in causal reasoning
+# minimum-potential-targets-to-consider-for-downstream-significance: Exclude genes with few qualifying targets while calculating downstream significance; default: 5
+# do-site-matching: Whether to force site matching in causality analysis; default: true 
+# site-match-proximity-threshold: Allow the phosphorylation relation to apply to close-by sites
+# site-effect-proximity-threshold: Allow changing sites with unknown effect to have the same effect with the neighbor site with known effect; Default: 0 (=exact usage of site effects)
+# built-in-network-resource-selection: Which network resource to use; default ??? (possible values: PC, REACH, PhosphoNetworks, IPTMNet, RHOGEF, PCTCGAConsensus, TRRUST, TfactS, NetworKIN)
+# relation-filter-type: limit the results with a specific type of relation (possible values: no-filter, phospho-only, expression-only, without-expression, phospho-primary-expression-secondary)
+# gene-focus: To crop the result network to the neighborhood of certain gene 
+# mutation-effect-file: To provide mutation effects (otherwise: all mutations assumed to be inactivating)
+# show-insignificant-data: Make the insignificant protein data visible on the result graph (might be better to turn off when too much)
+# hide-data-not-part-of-causal-relations: Only data that are in the identified causal relations are drawn on the result graph 
+# data-type-for-expressional-targets: Control possible other data types explainable by expressional relations; default: explanations generated only for proteomic changes
+# generate-data-centric-graph:  Generate data-centric graph as result as well (nodes are not the genes (gene-centric) but the data); default: false
+# gene-activity: Assign a specific activity or inactivity to a gene in the analysis
+# tf-activity-file: To input results from an inference for transcriptional factor activities 
+# use-strongest-proteomic-data-per-gene: Use only the strongest proteomic feature at the upstream of relations; default: false
+# randomized-matrix-directory-for-missing-proteomic-data: To provide use pre-generated matrices to compute significances when using randomization as alternative to G-test
+# missing-value-test-data-sufficiency-threshold: P-value threshold sufficiency test for G-test
+# custom-resource-directory
+# tcga-directory
+# hgnc-file
+# custom-causal-priors-file
+# custom-site-effects-file
+# use-expression-for-activity-evidence
+
