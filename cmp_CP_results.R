@@ -147,8 +147,32 @@ cat(paste0(".... written: ", outFile, "\n"))
 outFile <- file.path(outFolder, "relation_intersects.txt")
 write.table(out_dt, file=outFile, col.names=TRUE, row.names=FALSE, sep="\t", quote=F)
 cat(paste0(".... written: ", outFile, "\n"))
-
 cat(paste0(".... written: ", logFile, "\n"))
+
+
+
+
+tmp_dt <- out_dt
+tmp_dt$breaklab <-paste0(tmp_dt$ds_cmp, tmp_dt$cmp_type)
+i = unique(tmp_dt$breaklab)[1]
+for(i in unique(tmp_dt$breaklab)) {
+  tmp2_dt <- tmp_dt[tmp_dt$breaklab == i,]
+  stopifnot(nrow(tmp2_dt) > 0)
+  
+  sif_dt <- data.frame(
+    col1 = unlist(lapply(tmp2_dt$relation, function(x) unlist(strsplit(x, split=" "))[1])),
+    col2 = unlist(lapply(tmp2_dt$relation, function(x) unlist(strsplit(x, split=" "))[2])),
+    col3 = unlist(lapply(tmp2_dt$relation, function(x) unlist(strsplit(x, split=" "))[3])), 
+    stringsAsFactors=FALSE
+  ) 
+  
+  outFile <- file.path(outFolder, paste0(i, "_relations.sif"))
+  write.table(sif_dt, file=outFile, col.names=TRUE, row.names=FALSE, sep="\t", quote=F)
+  cat(paste0(".... written: ", outFile, "\n"))
+  cat(paste0(".... written: ", logFile, "\n"))
+  
+}
+
 
 
 stop("**** DONE - ok\n")
