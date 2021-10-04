@@ -150,11 +150,35 @@ cat(paste0("... written: ", outFile, "\n"))
 
 
 
+if(cmpType == "cmp") {
+  
+  stopifnot(samptypes %in% c("test-value-column", "control-value-column"))
 
+    p <- ggplot(plot_dt, aes_string(x=paste0(p1), y=paste0(p2), color="sampType")) +
+    geom_point(size = 3) +
+    labs(color="")+
+    facet_wrap(~sampType, scales = "free")+
+    stat_smooth(se = FALSE, method = "lm", size = 1,
+                color = 'grey30') +
+    scale_color_brewer(palette="Set1") + 
+    ggtitle(paste0(mytit), subtitle=paste0(mysub))+
+    ylab(paste0(p2))+
+    xlab(paste0(p1))+
+    mytheme 
 
-
+    outFile <- file.path(outFolder, paste0(p1, "_vs_", p2, "_", mysubFile, "_v2.", plotType))
+    ggsave(p, filename = outFile, height=myHeightGG, width=myWidthGG)
+    cat(paste0("... written: ", outFile, "\n"))
+    
+    
+}
 
 
 
 stop("-ok\n")
+
+require(paxtoolsr)
+
+getURI()
+
 

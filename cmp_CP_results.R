@@ -4,7 +4,7 @@
 
 require(foreach)
 
-pval_filt <- 0.05
+pval_filt <- 0.01
 
 # all_ds <- c("lumB-vs-lumA-johansson", "lumB-vs-lumA-krug-aggMean", "lumB-vs-lumA-mertins-aggMean")
 # all_ds <- c("lumB-corr-johansson-logTransf", "lumB-corr-krug-aggMean")
@@ -153,7 +153,7 @@ cat(paste0(".... written: ", logFile, "\n"))
 
 
 tmp_dt <- out_dt
-tmp_dt$breaklab <-paste0(tmp_dt$ds_cmp, tmp_dt$cmp_type)
+tmp_dt$breaklab <-paste0(tmp_dt$ds_cmp, "_", tmp_dt$cmp_type)
 i = unique(tmp_dt$breaklab)[1]
 for(i in unique(tmp_dt$breaklab)) {
   tmp2_dt <- tmp_dt[tmp_dt$breaklab == i,]
